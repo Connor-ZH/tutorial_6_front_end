@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { TouchableHighlight, View, Text, TextInput, StyleSheet,  SafeAreaView, ScrollView, StatusBar} from 'react-native'
+import { TouchableHighlight, View, Text,Alert, TextInput, StyleSheet, Button,  SafeAreaView, ScrollView, StatusBar} from 'react-native'
 import { DataTable } from 'react-native-paper';
 import {Query} from 'react-apollo';
 import { ApolloClient, HttpLink, InMemoryCache } from 'apollo-boost'
 import { ApolloProvider, graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-
+import RNRestart from 'react-native-restart'; 
 
 
 
@@ -14,14 +14,16 @@ export default class RNApp extends Component {
   constructor() {
     super()
     this.state = {
-      name: 'George Washington',
+      name: 'original',
     }
-    this.updateName = this.updateName.bind(this)
+    this.onPress = this.onPress.bind(this);
   }
-  updateName(name) {
+  onPress(){
     this.setState({
-      name
+      name:"refreshed"
     })
+    RNRestart.Restart();
+    Alert.alert("The waitlist has been refreshed")
   }
   render () {
     const read_entry_list = gql`query read_entry_list{
@@ -62,6 +64,7 @@ export default class RNApp extends Component {
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scrollView} >
           <Text style={{textAlign: 'center' ,fontWeight: 'bold',fontSize: 30}}>Customers Info</Text>
+          <View><Button title="Refresh the table" onPress={this.onPress}/></View>
             <DataTable style={{textAlign: 'center' ,fontWeight: 'bold'}}>
               <DataTable.Header >
                 <DataTable.Title style={{flex:1}}>No. </DataTable.Title>
